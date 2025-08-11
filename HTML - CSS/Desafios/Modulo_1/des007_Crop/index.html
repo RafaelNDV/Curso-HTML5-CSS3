@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem Flexível</title>
+</head>
+<body>
+    <h1>Imagem Flexível</h1>
+    <p>Você está vendo a imagem completa? Experimente ampliar e diminuir o tamanho da sua janela para aproveitar a experiência</p>
+    <picture>
+        <source media="(max-width: 450px)" srcset="imagens/imagem-49.png" type="image/png">
+        <source media="(max-width: 850px)" srcset="imagens/imagem-89.png" type="image/png">
+        <source media="(max-width: 1970px)" srcset="imagens/imagem-169.png" type="image/png">
+        <img src="imagens/imagem-219.png" alt="Maior foto">
+    </picture>
+</body>
+</html>
