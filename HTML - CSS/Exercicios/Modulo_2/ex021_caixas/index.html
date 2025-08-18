@@ -4,22 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modelo de Caixas</title>
-    <style>
-        h1{
+    <style> 
+        h1{  /* Box level*/
+            display: block;
             background-color: lightgray;
             height: 300px;
             width: 300px;
+            
             border-width: 10px;
             border-style: solid;
             border-color: darkgray;
+            /* border: 10px solid darkgray; Posso usar para ficar mais curto*/
 
             padding-top: 10px;
             padding-right: 10px;
             padding-bottom: 10px;
             padding-left: 10px;
+            /* padding: 10px 10px 10px 10px; forma mais curta*/
+            
+            /*margin: auto; isso centraliza*/
+            margin-top: 10px;
+            margin-right: 30px;
+            margin-bottom: 30px;
+            margin-left: 10px;
+            /* margin: 10px 30px 30px 10px; forma mais curta*/
+
+            outline-width: 2px;
+            outline-style: dashed;
+            outline-color: violet;
+            /*outline: 2px dashed violet; forma mais curta*/
         }
 
-        a{
+        a{ /* Inline level */
+            display: inline;
             border-width: 10px;
             border-style: solid;
             border-color: red;
