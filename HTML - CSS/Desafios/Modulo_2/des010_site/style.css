@@ -30,19 +30,21 @@ main{
 }
 main > div{
     background-color: white;
-    width: 800px;
-    border-radius: 3px;
+    width: 850px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.507);
 }
 main > div > h2{
     text-align: left;
     font-family: "droid";
-    padding: 2px 2px 2px 15px;
+    margin: 10px 0px 0px 0px;
+    padding: 2px 2px 2px 25px;
     color: green;
 }
 main > div > h3{
     text-align: left;
     font-family: "droid";
-    margin: 2px 2px 2px 15px;
+    margin: 2px 2px 2px 25px;
     padding: 2px 2px 2px 5px;
     color: green;
     background: linear-gradient(to right, rgb(149, 229, 149), white);
@@ -52,10 +54,15 @@ p > a{
     text-decoration: none;
     font-weight: bold;
 }
+p > a:hover{
+    text-decoration: underline;
+    color: rgb(52, 204, 52);
+}
 header{
     background: linear-gradient(to bottom, rgb(71, 184, 71), rgb(30, 77, 30)  );
-    padding: 20px;
-    margin: 0px;
+    padding: 20px 0px 10px 0px;
+    margin: 0px 0px 30px 0px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.507);
 }
 header > h1{
     text-align: center;
@@ -69,18 +76,66 @@ header > p{
     font-size: 0.8em;
 }
 main > div > p{
-    padding: 30px 15px 30px 15px;
+    padding: 30px 25px 30px 25px;
     text-align: justify;
 }
 nav{
-    position: absolute;
+    margin: 10px 0px 0px 3px;
+    justify-content: right;
 }
 nav > a{
     color: white;
     text-decoration: none;
-    padding: 5px 10px 1px 10px;
+    padding: 5px 10px 5px 10px;
     margin: 0px;
 }
 nav > a:hover{
     background-color: green;
+    border-radius: 15px;
+}
+footer{
+    background-color: darkgreen;
+    color: white;
+    margin: 30px 0px 0px 0px;
+    padding: 10px;
+    text-align: center;
+}
+main > div > div{
+    background-color: darkgreen;
+    display: flex;
+    width: calc(100% - 40px);
+    padding: 20px 20px 20px 20px;
+    aspect-ratio: 16/9;
+    justify-content: center;
+    justify-items: center;
+}
+main > div > div > iframe{
+    width: 100%;
+    height: 100%;
+}
+section{
+    margin: 0px 25px 0px 25px;
+    padding: 1px 15px 15px 15px;
+    background-color: rgb(160, 230, 160);
+    border-radius: 0px 0px 10px 10px;
+}
+h4{
+    background-color: rgb(72, 194, 72);
+    margin: 30px 25px 0px 25px;
+    color: white;
+    padding: 10px;
+    border-radius: 10px 10px 0px 0px;
+}
+section > p{
+    margin: 20px 0px 20px 0px;
+}
+ul{
+    list-style-type: none;
+}
+section > div{
+    display: flex;
+    gap: 25%;
+}
+li{
+    font-weight: bold;
 }
