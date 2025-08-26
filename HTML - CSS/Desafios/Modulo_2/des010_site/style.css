@@ -33,7 +33,8 @@ main{
 }
 main > div{
     background-color: white;
-    width: 850px;
+    width: 95%;
+    max-width: 850px;
     border-radius: 5px;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.507);
 }
@@ -109,7 +110,7 @@ footer > p{
 main > div > div{
     background-color: darkgreen;
     display: flex;
-    width: calc(100% - 40px);
+    width: 100%;
     padding: 20px 20px 20px 20px;
     aspect-ratio: 16/9;
     justify-content: center;
@@ -144,4 +145,10 @@ section > div{
 }
 li{
     font-weight: bold;
+}
+img{
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
