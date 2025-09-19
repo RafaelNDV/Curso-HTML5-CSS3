@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Piano Tiles - Mobile</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#7c3aed; --muted:#9aa4b2;
+      --tile-w:22vw; --cols:4; --gap:3vw;
+    }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, Arial, sans-serif;background:linear-gradient(180deg,#071025 0%,var(--bg) 60%);color:white}
+    .wrap{max-width:700px;margin:0 auto;padding:12px;min-height:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+    header{width:100%;display:flex;justify-content:space-between;align-items:center}
+    h1{font-size:18px;margin:0}
+    .hud{display:flex;gap:10px;align-items:center}
+    .stat{background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);padding:8px 12px;border-radius:12px;font-size:14px;color:var(--muted)}
+
+    .game-card{width:100%;aspect-ratio:9/16;max-height:860px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:18px;padding:8px;box-shadow:0 6px 20px rgba(2,6,23,0.6);display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden}
+    .board{flex:1;display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:calc(var(--gap)/2);width:100%;height:100%;padding:6px;box-sizing:border-box;position:relative}
+    .col{position:relative;overflow:visible;border-left:1px dashed rgba(255,255,255,0.02)}
+
+    .tile{position:absolute;left:0;right:0;margin:auto;width:calc(100% - 12px);height:calc((100% / 6) - 10px);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;user-select:none;box-shadow:0 6px 18px rgba(0,0,0,0.45);transform:translateY(-120%);will-change:transform,opacity}
+    .tile.good{background:linear-gradient(180deg,var(--accent),#5b21b6);}
+    .tile.miss{background:linear-gradient(180deg,#444,#2f2f2f);opacity:0.9}
+
+    .controls{display:flex;gap:8px;margin-top:6px}
+    .btn{background:linear-gradient(180deg,#111827,#0b1220);border:1px solid rgba(255,255,255,0.03);padding:10px 14px;border-radius:12px;font-weight:600;color:#fff;}
+    .btn.highlight{background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;}
+    .small{font-size:12px;padding:8px 10px}
+
+    .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.9));backdrop-filter:blur(4px);z-index:50}
+    .menu{width:86%;max-width:420px;background:linear-gradient(180deg,#071026, #0b1323);padding:18px;border-radius:16px;box-shadow:0 8px 40px rgba(2,6,23,0.6);text-align:center}
+    .menu h2{margin:0 0 8px 0}
+    .menu p{margin:0 0 14px 0;color:var(--muted)}
+
+    @media (min-width:700px){:root{--tile-w:140px}}
+
+    footer{font-size:12px;color:var(--muted);margin-bottom:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Piano Tiles - Mobile</h1>
+      <div class="hud">
+        <div class="stat" id="score">Score: 0</div>
+        <div class="stat" id="best">Best: 0</div>
+      </div>
+    </header>
+
+    <main class="game-card" id="gameCard">
+      <div class="board" id="board"></div>
+      <div class="overlay" id="overlay">
+        <div class="menu">
+          <h2>Toque nas teclas pretas</h2>
+          <p>Toque as tiles quando elas caírem. A velocidade aumenta com o tempo. Boa sorte!</p>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn highlight" id="startBtn">Jogar</button>
+            <button class="btn small" id="modeBtn">4 colunas</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="controls">
+      <button class="btn small" id="pauseBtn">Pausar</button>
+      <button class="btn small" id="soundBtn">Som: ON</button>
+    </div>
+
+    <footer>Toque ou clique nas teclas. Ideal para celular — jogue na vertical.</footer>
+  </div>
+
+  <script>
+    const boardEl = document.getElementById('board');
+    const overlay = document.getElementById('overlay');
+    const startBtn = document.getElementById('startBtn');
+    const scoreEl = document.getElementById('score');
+    const bestEl = document.getElementById('best');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const soundBtn = document.getElementById('soundBtn');
+    const modeBtn = document.getElementById('modeBtn');
+
+    let cols = 4;
+    let activeTiles = [];
+    let running = false;
+    let lastTime = 0;
+    let spawnTimer = 0;
+    let spawnInterval = 1000; // intervalo inicial menor (não tão espaçado)
+    let gravity = 0.0006;     // queda inicial mais lenta
+    let speedMultiplier = 1;
+    let score = 0;
+    let best = localStorage.getItem('pt_best')||0;
+    bestEl.textContent = 'Best: '+best;
+    let soundOn = true;
+
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    function beep(freq=880,dur=0.06,vol=0.06){
+      if(!soundOn) return;
+      try{
+        if(!audioCtx) audioCtx = new AudioCtx();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine'; o.frequency.value = freq;
+        g.gain.value = vol;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start();
+        o.stop(audioCtx.currentTime + dur);
+      }catch(e){}
+    }
+
+    function resizeBoard(){
+      document.documentElement.style.setProperty('--cols', cols);
+      boardEl.innerHTML = '';
+      for(let i=0;i<cols;i++){
+        const c = document.createElement('div');
+        c.className='col';
+        c.dataset.col=i;
+        boardEl.appendChild(c);
+      }
+    }
+    resizeBoard();
+
+    function setMode(){
+      modeBtn.textContent = cols===4? '3 colunas' : '4 colunas';
+    }
+    setMode();
+
+    modeBtn.addEventListener('click',()=>{
+      cols = cols===4?3:4;
+      setMode();
+      resizeBoard();
+    });
+
+    pauseBtn.addEventListener('click',()=>{
+      if(!running) return;
+      running = false;
+      pauseBtn.textContent = 'Retomar';
+    });
+
+    soundBtn.addEventListener('click',()=>{
+      soundOn = !soundOn;
+      soundBtn.textContent = 'Som: ' + (soundOn? 'ON':'OFF');
+    });
+
+    function startGame(){
+      activeTiles = [];
+      score = 0; updateScore();
+      spawnInterval = 1000;  // começa menos espaçado
+      gravity = 0.0006;      // começa devagar
+      speedMultiplier = 1;
+      lastTime = performance.now(); spawnTimer = 0;
+      running = true; overlay.style.display='none'; pauseBtn.textContent='Pausar';
+      loop(lastTime);
+    }
+
+    startBtn.addEventListener('click', startGame);
+
+    function makeTile(col){
+      const el = document.createElement('div');
+      el.className='tile good';
+      el.dataset.col = col;
+      el.style.left = (col*(100/cols)) + '%';
+      el.style.width = `calc(${100/cols}% - 12px)`;
+      const startY = -boardEl.clientHeight * 1.4;
+      el.style.transform = `translateY(${startY}px)`;
+      boardEl.appendChild(el);
+      return {el, y:startY, col, speed:0, hit:false};
+    }
+
+    function spawn(){
+      const col = Math.floor(Math.random()*cols);
+      const tile = makeTile(col);
+      activeTiles.push(tile);
+    }
+
+    function updateScore(){ scoreEl.textContent = 'Score: '+score; }
+
+    function endGame(){
+      running = false; overlay.style.display='flex'; startBtn.textContent='Jogar novamente';
+      startBtn.classList.add('highlight');
+      if(score>best){ best=score; localStorage.setItem('pt_best',best); bestEl.textContent='Best: '+best; }
+    }
+
+    boardEl.addEventListener('pointerdown', (ev)=>{
+      ev.preventDefault();
+      if(!running) return;
+      const px = ev.clientX;
+      const py = ev.clientY;
+      let foundTile = null;
+      let foundTop = -Infinity;
+      for(let t of activeTiles){
+        if(t.hit) continue;
+        const rect = t.el.getBoundingClientRect();
+        if(px >= rect.left && px <= rect.right && py >= rect.top && py <= rect.bottom){
+          if(rect.top > foundTop){ foundTop = rect.top; foundTile = t; }
+        }
+      }
+      if(foundTile){
+        foundTile.hit = true;
+        foundTile.el.style.transition = 'transform 140ms ease, opacity 140ms linear';
+        foundTile.el.style.opacity = '0';
+        foundTile.el.style.transform = `translateY(${foundTile.y}px) scale(0.86)`;
+        setTimeout(()=>{
+          const idx = activeTiles.indexOf(foundTile);
+          if(idx !== -1) activeTiles.splice(idx,1);
+          foundTile.el.remove();
+        },160);
+
+        score += 1; updateScore();
+        beep(880 - Math.min(400,score*6),0.05,0.08);
+
+        // aumenta velocidade gradualmente
+        if(score % 4 == 0){
+          speedMultiplier += 0.05;
+          gravity += 0.00005;
+          spawnInterval = Math.max(450, spawnInterval - 25);
+        }
+      } else {
+        score = Math.max(0, score-1); updateScore(); beep(150,0.08,0.07);
+      }
+    });
+
+    function loop(now){
+      if(!running) return;
+      const dt = now - lastTime; lastTime = now;
+      spawnTimer += dt;
+      if(spawnTimer > spawnInterval){ spawnTimer = 0; spawn(); }
+
+      const boardRect = boardEl.getBoundingClientRect();
+      for(let i=activeTiles.length-1;i>=0;i--){
+        const t = activeTiles[i];
+        if(t.hit) continue;
+        t.speed += gravity*dt*speedMultiplier;
+        t.y += t.speed * dt;
+        t.el.style.transform = `translateY(${t.y}px)`;
+        const tileRect = t.el.getBoundingClientRect();
+        if(tileRect.top > boardRect.bottom){
+          activeTiles.splice(i,1);
+          t.el.remove();
+          beep(120,0.12,0.06);
+          endGame();
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden && running){ running=false; pauseBtn.textContent='Retomar'; }
+    });
+
+    boardEl.style.touchAction = 'none';
+
+    window.addEventListener('keydown',(e)=>{
+      if(!running) return;
+      if(e.key>='1' && e.key<='9'){
+        const keyIndex = parseInt(e.key)-1;
+        if(keyIndex<cols){
+          const rect = boardEl.getBoundingClientRect();
+          const x = (keyIndex + 0.5)*(rect.width/cols) + rect.left;
+          boardEl.dispatchEvent(new PointerEvent('pointerdown',{clientX:x,clientY:rect.top+rect.height-10}));
+        }
+      }
+    });
+
+    document.body.addEventListener('pointerdown',function initAudio(){ if(!audioCtx){ try{ audioCtx = new AudioCtx(); audioCtx.resume(); }catch(e){} } document.body.removeEventListener('pointerdown',initAudio); });
+  </script>
+</body>
+</html>
