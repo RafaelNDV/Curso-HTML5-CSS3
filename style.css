@@ -18,10 +18,10 @@ a:hover{
 }
 
 a.btn{
-    display: block;
+    display: inline-block;
     background-color: rgb(59, 59, 192);
     color: white;
-    margin: 20px;
+    margin: 10px 20px 10px 20px;
     padding: 20px;
     max-width: 105px;
     border-radius: 15px;
