@@ -16,3 +16,18 @@ a:hover{
     text-decoration: underline;
     color: rgb(48, 35, 168);
 }
+
+a.btn{
+    display: block;
+    background-color: rgb(59, 59, 192);
+    color: white;
+    margin: 20px;
+    padding: 20px;
+    max-width: 105px;
+    border-radius: 15px;
+}
+a.btn:hover{
+    background-color: rgb(48, 35, 168);
+    color: rgb(160, 160, 160);
+    text-decoration: none;
+}
