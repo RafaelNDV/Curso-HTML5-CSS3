@@ -19,78 +19,114 @@ body, html{
     width: 100vw;
     height: 100vh;
 }
-img{
-    height: 30vh;
-    width: 70vw;
-}
 main{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
     height: 100vh;
     width: 100vw;
 }
 section{
+    position: absolute;
     background-color: white;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.637);
+    left: 50%;
+    top: 50%;
+    height: 600px;
+    width: 350px;
     border-radius: 15px;
-    width: 70vw;
-    height: 80vh;
     overflow: hidden;
+    box-shadow: 0px 0px 15px black;
+    transition: width .2s, height .2s;
+    transform: translate(-50%, -50%);
+}
+section > div#foto{
+    background: var(--cor2) url(../fotodologin.jpg) no-repeat;
+    display: block;
+    background-position: center center;
+    background-size: cover;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.658);
+    height: 40%;
+    width: 100%;
 }
 h1{
     text-align: center;
-    margin: 10px;
+    font-size: 2.3em;
 }
 p{
     text-align: justify;
-    padding: 10px;
+    margin: 10px;
 }
-span{
+form > div.campo{
+    background-color: var(--cor2);
+    margin: auto;
+    margin: 0px 0px 5px 5px;
+    width: calc(100% - 10px);
+    height: 50px;
+    border-radius: 8px;
+}
+div.campo > span{
     color: white;
+    height: 40px;
+    margin: auto;
+    margin-top: 7px;
+    width: 10%;
+    font-size: 2em;
+    height: 100%;
 }
-input{
-    width: 60vw;
-    height: 5vh;
-    border-radius: 10px;
-    margin: 3px;
-    border: 2px solid var(--cor2);
+div.campo{
+    position: relative;
 }
-div{
-    display: flex;
-    background-color: #5f2c82;
-    margin: 5px;
-    border-radius: 10px;
-    height: 6vh;
-    width: 68vw;
-    justify-content: center;
-    align-items: center;
-}
-button{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
-    width: 68vw;
-    height: 7vh;
-    border-radius: 10px;
-}
-button#login{
-    background-color: var(--cor1);
-    color: white;
+div.campo > input{
+    position: absolute;
+    font-size: 1.2em;
+    text-indent: 5px;
+    width: calc(90% - 5px);
+    height: 42px;
+    top: 50%;
+    transform: translate(0%, -50%);
+    border-radius: 8px;
     border: none;
 }
-button#login:hover{
-    background-color: white;
-    color: #49a09d;
+div.botoes > a{
+    display: block;
+    text-decoration: none;
+    background-color: var(--cor1);
+    color: white;
+    height: 50px;
+    margin: 10px 5px 0px 5px;
+    border-radius: 8px;
+}
+a > p{
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 0px;
+    margin: 0px;
+    padding-top: 7px;
+}
+div.botoes > input{
+    display: block;
+    text-decoration: none;
+    background-color: var(--cor1);
+    color: white;
+    height: 50px;
+    width: calc(100% - 10px);
+    border: none;
+    margin: 10px 5px 0px 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+div.botoes > input:hover{
+    background-color: #367573;
+    color: white;
     border: 2px solid var(--cor1);
 }
-button#esqueci{
+div.botoes > a#esqueci{
+    background-color: white;
     color: var(--cor1);
     border: 2px solid var(--cor1);
 }
-button#esqueci:hover{
-    background-color: var(--cor1);
+div.botoes > a#esqueci:hover{
+    background-color: #367573;
     color: white;
-    border: 2px solid var(--cor2);
 }
