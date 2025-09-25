@@ -76,6 +76,7 @@ div.campo{
 }
 div.campo > input{
     position: absolute;
+    background-color: rgb(233, 227, 227);
     font-size: 1.2em;
     text-indent: 5px;
     width: calc(90% - 5px);
@@ -96,8 +97,7 @@ div.botoes > a{
 }
 a > p{
     text-align: center;
-    font-weight: bold;
-    font-size: 1.5em;
+    font-size: 1.2em;
     padding: 0px;
     margin: 0px;
     padding-top: 7px;
@@ -112,8 +112,7 @@ div.botoes > input{
     border: none;
     margin: 10px 5px 0px 5px;
     border-radius: 8px;
-    font-weight: bold;
-    font-size: 1.5em;
+    font-size: 1.2em;
     cursor: pointer;
 }
 div.botoes > input:hover{
