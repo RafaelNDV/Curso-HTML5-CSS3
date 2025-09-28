@@ -8,6 +8,8 @@
 }
 body{
     background-color: lightgray;
+    height: 100vh;
+    width: 100vw;
 }
 header{
     background-color: rgb(121, 121, 121);
