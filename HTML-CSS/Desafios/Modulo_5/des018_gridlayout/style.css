@@ -1,11 +1,29 @@
 @charset "UTF-8";
 
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 main.container{
-    height: 600px;
-    width: 900px;
+    height: 100%;
+    width: 100%;
     display: grid;
     grid-template: 2fr 1fr 4fr 1fr / 1fr 2fr 1fr;
     gap: 5px;
+    margin: 10px;
+}
+.container > div{
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
 }
 .topo{
     background-color: red;
