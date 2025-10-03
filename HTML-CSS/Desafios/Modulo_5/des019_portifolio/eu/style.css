@@ -26,7 +26,7 @@ header{
 nav{
     display: flex;
     flex-flow: row nowrap;
-    justify-content: end;
+    justify-content: center;
     gap: 20px;
 }
 nav a{
@@ -91,4 +91,34 @@ section h2{
 section iframe{
     width: 100%;
     aspect-ratio: 16/9;
+    border-radius: 8px;
+}
+.hab-container{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 15px;
+}
+.nome{
+    color: var(--texto);
+    font-weight: bold;
+}
+.numero{
+    font-weight: bold;
+    color: var(--destaque-inverso);
+}
+.info{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.barra{
+    background-color: var(--fundo-principal);
+    height: 8px;
+    width: 100%;
+    border-radius: 10px;
+}
+.preenchido{
+    background-color: var(--destaque-inverso);
+    height: 100%;
+    border-radius: 10px;
 }
