@@ -23,7 +23,6 @@ a.btn{
     color: white;
     margin: 10px 20px 10px 20px;
     padding: 20px;
-    max-width: 105px;
     border-radius: 15px;
 }
 a.btn:hover{
